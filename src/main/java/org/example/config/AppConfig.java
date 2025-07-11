@@ -42,6 +42,7 @@ public class AppConfig {
         SpringLiquibase liquibase = new SpringLiquibase();
         liquibase.setDataSource(dataSource);
         liquibase.setChangeLog("classpath:db/changelog/changelog-master.xml");
+        //liquibase.setChangeLog("file:c:\\WORK\\db\\changelog\\changelog-master.xml");
         liquibase.setDefaultSchema("liquibase_schema");
         liquibase.setLiquibaseSchema("liquibase_schema");
         liquibase.setContexts("development,test");

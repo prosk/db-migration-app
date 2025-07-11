@@ -8,5 +8,6 @@
     <include file="classpath:db/changelog/001-create-users-table.xml"/>
     <include file="classpath:db/changelog/002-create-orders-table.xml"/>
     <include file="classpath:db/changelog/003-create-tasks-table.xml"/>
+    <include file="classpath:db/changelog/004-create-roles-table.xml"/>
 
 </databaseChangeLog>

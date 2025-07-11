@@ -15,9 +15,8 @@
     </Appenders>
 
     <Loggers>
-        <Logger name="liquibase" level="INFO" additivity="false">
+        <Logger name="liquibase" level="TRACE">
             <AppenderRef ref="LiquibaseFileAppender"/>
-            <AppenderRef ref="Console"/>
         </Logger>
 
         <Root level="INFO">
