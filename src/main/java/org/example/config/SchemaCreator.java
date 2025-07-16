@@ -17,6 +17,9 @@ public class SchemaCreator {
     private final DataSource dataSource;
     private final Environment environment;
 
+    private static final int MAX_ATTEMPTS = 3;
+    private static final int RETRY_DELAY_MS = 1000;
+
     public SchemaCreator(DataSource dataSource, Environment environment) {
         this.dataSource = dataSource;
         this.environment = environment;
@@ -25,13 +28,27 @@ public class SchemaCreator {
 
     private void createSchema() {
         String schemaName = getCommandLineParam(environment, "schemaName");
-        try (Connection connection = dataSource.getConnection();
-             Statement statement = connection.createStatement()) {
 
-            statement.execute("CREATE SCHEMA IF NOT EXISTS liquibase_schema");
-
-        } catch (SQLException e) {
-            throw new RuntimeException("Failed to create schema", e);
+        for (int attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
+            logger.info("Try to create schema {}", schemaName);
+            try (Connection connection = dataSource.getConnection();
+                 Statement statement = connection.createStatement()) {
+                statement.execute("CREATE SCHEMA IF NOT EXISTS " + schemaName);
+                logger.info("CREATE SCHEMA operator was completed successfully");
+            } catch (SQLException e) {
+                logger.warn("Creating schema attempt " + attempt + " failed due to error " + e.getMessage());
+                if (attempt == MAX_ATTEMPTS) {
+                    throw new RuntimeException("Failed to create schema", e);
+                }
+            }
+            if (attempt < MAX_ATTEMPTS) {
+                try {
+                    Thread.sleep(RETRY_DELAY_MS);
+                } catch (InterruptedException ie) {
+                    Thread.currentThread().interrupt();
+                    break;
+                }
+            }
         }
     }
 
