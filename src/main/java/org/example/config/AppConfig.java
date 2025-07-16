@@ -31,8 +31,8 @@ public class AppConfig {
     }
 
     @Bean
-    public SchemaCreator schemaCreator(DataSource dataSource) {
-        return new SchemaCreator(dataSource);
+    public SchemaCreator schemaCreator(DataSource dataSource, Environment environment) {
+        return new SchemaCreator(dataSource, environment);
     }
 
     @Bean
